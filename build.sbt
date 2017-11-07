@@ -28,7 +28,7 @@ lazy val sharedJs = shared.js
 
 lazy val server = project
   .dependsOn(sharedJvm)
-  .enablePlugins(SbtWeb, WebScalaJSBundlerPlugin, SbtTwirl, JavaAppPackaging)
+  .enablePlugins(WebScalaJSBundlerPlugin, SbtTwirl, JavaAppPackaging)
   .settings(commonSettings)
   .settings(
     scalaJSProjects := Seq(client),
@@ -43,7 +43,7 @@ lazy val server = project
   )
 
 lazy val client = project
-  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin)
   .dependsOn(sharedJs)
   .settings(commonSettings)
   .settings(
@@ -58,4 +58,4 @@ lazy val client = project
   )
 
 // loads the server project at sbt startup
-//onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }
+onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }

@@ -17,5 +17,5 @@ object ScalaJSExample {
 
 object ScalaJSExample extends App {
 
-    OutWatch.render("#app", h1(SharedMessages.itWorks))
+    OutWatch.render("#app", h1(SharedMessages.itWorks + " 1111111"))
 }
