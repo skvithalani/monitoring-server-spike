@@ -6,7 +6,7 @@ import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 
 object WebServer {
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     implicit val system = ActorSystem("server-system")
     implicit val materializer = ActorMaterializer()
 
@@ -23,7 +23,7 @@ object WebServer {
 
   def bundleUrl(projectName: String): Option[String] = {
     val name = projectName.toLowerCase
-    Seq(s"$name-opt-bundle.js", s"$name-fastopt-bundle.js")
+    Seq(s"$name-opt-bundle.js", s"$name-fastopt.js")
       .find(name => getClass.getResource(s"/public/$name") != null)
       .map(x ⇒ s"/assets/$x")
   }

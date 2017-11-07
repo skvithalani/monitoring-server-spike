@@ -28,18 +28,11 @@ lazy val sharedJs = shared.js
 
 lazy val server = project
   .dependsOn(sharedJvm)
-  .enablePlugins(SbtWeb, WebScalaJSBundlerPlugin, SbtTwirl, JavaAppPackaging)
   .settings(commonSettings)
   .settings(
-    scalaJSProjects := Seq(client),
-    pipelineStages in Assets := Seq(scalaJSPipeline),
-    // triggers scalaJSPipeline when using compile or continuous compilation
-    compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
     libraryDependencies ++= Seq(
       "com.typesafe.akka" %% "akka-http" % "10.0.10"
-    ),
-    WebKeys.packagePrefix in Assets := "public/",
-    managedClasspath in Runtime += (packageBin in Assets).value
+    )
   )
 
 lazy val client = project
@@ -52,10 +45,10 @@ lazy val client = project
       "org.scala-js" %%% "scalajs-dom" % "0.9.3",
       "io.github.outwatch" %%% "outwatch" % "0.10.2"
     ),
-//    webpackDevServerExtraArgs := Seq("--inline"),
-//    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
+    webpackDevServerExtraArgs := Seq("--inline"),
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault"
   )
 
 // loads the server project at sbt startup
-//onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }
+onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }

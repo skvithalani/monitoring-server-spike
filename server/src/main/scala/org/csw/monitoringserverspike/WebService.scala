@@ -1,25 +1,24 @@
 package org.csw.monitoringserverspike
 
+import java.nio.file.Files
+
 import akka.http.scaladsl.server.Directives
 import org.csw.monitoringserverspike.shared.SharedMessages
-import org.csw.monitoringserverspike.twirl.Implicits._
 
 class WebService() extends Directives {
 
   val route = {
     pathSingleSlash {
-      get {
-        complete {
-          org.csw.monitoringserverspike.html.index.render(SharedMessages.itWorks)
-        }
+      getFromResource("index.html")
+    }
+  } ~
+    pathPrefix("assets" / Remaining) { file =>
+      // optionally compresses the response with Gzip or Deflate
+      // if the client accepts compressed responses
+      encodeResponse {
+        getFromResource("public/" + file)
       }
-    } ~
-      pathPrefix("assets" / Remaining) { file =>
-        // optionally compresses the response with Gzip or Deflate
-        // if the client accepts compressed responses
-        encodeResponse {
-          getFromResource("public/" + file)
-        }
-      }
+    } ~ path("fastOp.js") {
+    getFromFile("../client/target/scala-2.12/scalajs-bundler/main/client-fastopt-bundle.js")
   }
 }
