@@ -3,8 +3,6 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.9.0")
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.2.2")
 
-addSbtPlugin("com.vmunier" % "sbt-web-scalajs" % "1.0.6")
-
 addSbtPlugin("com.typesafe.sbt" % "sbt-twirl" % "1.3.13")
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.21")
@@ -18,7 +16,7 @@ scalacOptions ++= Seq(
   "-unchecked",
   "-deprecation",
   //"-Xfatal-warnings",
-  "-Xlint",
+  "-Xlint:-unused,_",
   "-Yno-adapted-args",
   "-Ywarn-dead-code",
   "-Xfuture"

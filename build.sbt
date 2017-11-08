@@ -31,7 +31,7 @@ lazy val server = project
   .enablePlugins(WebScalaJSBundlerPlugin, SbtTwirl, JavaAppPackaging)
   .settings(commonSettings)
   .settings(
-    scalaJSProjects := Seq(client),
+    scalaJSProjects := clientProjects,
     pipelineStages in Assets := Seq(scalaJSPipeline),
     // triggers scalaJSPipeline when using compile or continuous compilation
     compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
@@ -59,3 +59,8 @@ lazy val client = project
 
 // loads the server project at sbt startup
 onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }
+
+def clientProjects = sys.props.get("CommandLine") match {
+  case Some("true") => Seq(client)
+  case _            => Seq.empty
+}
