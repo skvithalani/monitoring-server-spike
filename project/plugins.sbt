@@ -23,3 +23,5 @@ scalacOptions ++= Seq(
   "-Ywarn-dead-code",
   "-Xfuture"
 )
+
+transitiveClassifiers in Global := Seq(Artifact.SourceClassifier)
