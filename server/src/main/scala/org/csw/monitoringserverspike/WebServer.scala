@@ -23,7 +23,7 @@ object WebServer {
 
   def bundleUrl(projectName: String): Option[String] = {
     val name = projectName.toLowerCase
-    Seq(s"$name-opt-bundle.js", s"$name-fastopt-bundle.js")
+    Seq(s"$name-opt-bundle.js.gz", s"$name-opt-bundle.js", s"$name-fastopt-bundle.js")
       .find(name => getClass.getResource(s"/public/$name") != null)
       .map(x ⇒ s"/assets/$x")
   }
