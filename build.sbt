@@ -26,17 +26,8 @@ lazy val shared = crossProject
 lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
-lazy val server = project
-  .dependsOn(sharedJvm)
-  .settings(commonSettings)
-  .settings(
-    libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.0.10"
-    )
-  )
-
 lazy val client = project
-  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin)
   .dependsOn(sharedJs)
   .settings(commonSettings)
   .settings(
@@ -48,6 +39,25 @@ lazy val client = project
     webpackDevServerExtraArgs := Seq("--inline"),
     jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
     scalacOptions += "-P:scalajs:sjsDefinedByDefault"
+  )
+
+lazy val server = project
+  .dependsOn(sharedJvm)
+  .enablePlugins(WebScalaJSBundlerPlugin, SbtTwirl, JavaAppPackaging)
+  .settings(commonSettings)
+  .settings(
+    scalaJSProjects := Seq(client),
+    pipelineStages in Assets := Seq(scalaJSPipeline),
+    pipelineStages := Seq(gzip),
+    // Expose as sbt-web assets some files retrieved from the NPM packages of the `client` project
+    npmAssets ++= NpmAssets.ofProject(client) { modules => (modules / "font-awesome").allPaths }.value,
+    // triggers scalaJSPipeline when using compile or continuous compilation
+    compile in Compile := ((compile in Compile) dependsOn scalaJSPipeline).value,
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http" % "10.0.10"
+    ),
+    WebKeys.packagePrefix in Assets := "public/",
+    managedClasspath in Runtime += (packageBin in Assets).value
   )
 
 // loads the server project at sbt startup

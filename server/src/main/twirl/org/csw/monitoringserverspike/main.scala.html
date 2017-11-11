@@ -1,0 +1,14 @@
+@(title: String)(content: Html)
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>@title</title>
+  </head>
+  <body>
+    @content
+    <script src=@org.csw.monitoringserverspike.WebServer.bundleUrl("client")></script>
+
+  </body>
+</html>
