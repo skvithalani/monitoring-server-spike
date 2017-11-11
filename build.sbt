@@ -27,7 +27,7 @@ lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
 lazy val client = project
-  .enablePlugins(ScalaJSBundlerPlugin)
+  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
   .dependsOn(sharedJs)
   .settings(commonSettings)
   .settings(
