@@ -27,7 +27,7 @@ lazy val sharedJvm = shared.jvm
 lazy val sharedJs = shared.js
 
 lazy val client = project
-  .enablePlugins(ScalaJSPlugin, ScalaJSBundlerPlugin)
+  .enablePlugins(ScalaJSBundlerPlugin)
   .dependsOn(sharedJs)
   .settings(commonSettings)
   .settings(
@@ -50,7 +50,7 @@ lazy val server = project
   .enablePlugins(WebScalaJSBundlerPlugin, SbtTwirl, JavaAppPackaging)
   .settings(commonSettings)
   .settings(
-    scalaJSProjects := clientProjects,
+    scalaJSProjects := Seq(client),
     pipelineStages in Assets := Seq(scalaJSPipeline),
     pipelineStages := Seq(gzip),
     // Expose as sbt-web assets some files retrieved from the NPM packages of the `client` project
@@ -67,7 +67,3 @@ lazy val server = project
 // loads the server project at sbt startup
 onLoad in Global := (onLoad in Global).value andThen { s: State => "project server" :: s }
 
-def clientProjects = sys.props.get("CommandLine") match {
-  case Some("true") => Seq(client)
-  case _            => Seq.empty
-}
